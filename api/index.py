@@ -1,4 +1,16 @@
-"""Vercel serverless function handler for the Flask application."""
+"""Vercel serverless function handler for the Flask application.
+
+This handler exposes the Flask app for Vercel's serverless environment.
+Vercel automatically manages HOST, PORT, DEBUG, and FLASK_ENV.
+
+Required environment variables (set in Vercel Dashboard):
+  - SECRET_KEY: Secure application secret
+
+Optional environment variables:
+  - LOG_LEVEL: Logging level (default: INFO)
+  - MODEL_PATH: Path to model artifact (default: models/floods.save)
+  - SCALER_PATH: Path to scaler artifact (default: models/transform.save)
+"""
 
 import os
 import sys
@@ -9,14 +21,12 @@ project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-# Set environment variables for Vercel
-os.environ.setdefault("DEBUG", "False")
-os.environ.setdefault("LOG_LEVEL", "INFO")
-os.environ.setdefault("MODEL_PATH", "models/floods.save")
-os.environ.setdefault("SCALER_PATH", "models/transform.save")
+# Set environment for Vercel (no need to set HOST, PORT, or DEBUG)
+os.environ.setdefault("FLASK_ENV", "production")
 
 # Import and expose the Flask application
 from src.app import app
 
 # Export for Vercel
 __all__ = ["app"]
+

@@ -205,7 +205,7 @@ reports/
 ### Local Development
 1. Create and activate a virtual environment.
 2. Install dependencies: `pip install -r requirements.txt`
-3. Copy `.env.example` to `.env` and update values as needed.
+3. Copy `.env.example` to `.env` and update values as needed (optional for local dev).
 4. Start locally for development: `python -m flask --app src.app run --debug`
 
 ### Production with Gunicorn
@@ -222,15 +222,22 @@ Rising Waters is fully compatible with Vercel and can be deployed with a single 
 1. Push your code to GitHub: `git push origin main`
 2. Visit https://vercel.com/new
 3. Import your GitHub repository
-4. Add environment variables (see below)
+4. Add the `SECRET_KEY` environment variable (see below)
 5. Click Deploy
 
 #### Required Environment Variables for Vercel
-| Variable | Value | Example |
+Only one environment variable is **required** in Vercel dashboard:
+
+| Variable | Description | Example |
 | --- | --- | --- |
-| `SECRET_KEY` | Random 32+ character string | `your-secure-key-here` |
-| `DEBUG` | `False` (never True in production) | `False` |
-| `LOG_LEVEL` | Logging level | `INFO` |
+| `SECRET_KEY` | Secure application secret (32+ characters) | `your-secure-key-here` |
+
+#### Optional Environment Variables for Vercel
+These have sensible defaults and are optional:
+
+| Variable | Description | Default |
+| --- | --- | --- |
+| `LOG_LEVEL` | Logging level (DEBUG, INFO, WARNING, ERROR) | `INFO` |
 | `MODEL_PATH` | Path to model artifact | `models/floods.save` |
 | `SCALER_PATH` | Path to scaler artifact | `models/transform.save` |
 
@@ -240,11 +247,19 @@ import secrets
 print(secrets.token_hex(32))
 ```
 
+#### Vercel Managed Variables
+The following are **automatically managed by Vercel** and should NOT be set manually:
+- `HOST` - Automatically set to `0.0.0.0`
+- `PORT` - Automatically managed by Vercel
+- `DEBUG` - Automatically set to `False` in production
+- `FLASK_ENV` - Automatically set to `production`
+
 #### How It Works
 - The `api/index.py` file serves as the serverless function handler for Vercel
 - Vercel automatically detects Flask and configures the Python runtime
 - All routes are forwarded to the Flask application
 - Model artifacts are included in the deployment
+- The application uses sensible production-safe defaults
 
 #### For Detailed Instructions
 See [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md) for:

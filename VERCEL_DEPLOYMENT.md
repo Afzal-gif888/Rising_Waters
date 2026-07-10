@@ -40,15 +40,29 @@ Rising_Waters/
 
 ## Required Environment Variables
 
-These variables must be set in the Vercel dashboard:
+Only **one** environment variable is required in the Vercel dashboard:
 
 | Variable | Description | Example | Required |
 | --- | --- | --- | --- |
-| `SECRET_KEY` | Flask secret key for session management | `your-secure-random-key` | Yes |
-| `DEBUG` | Debug mode (must be False in production) | `False` | Yes |
-| `LOG_LEVEL` | Logging level | `INFO` | No (default: INFO) |
-| `MODEL_PATH` | Path to trained model artifact | `models/floods.save` | No |
-| `SCALER_PATH` | Path to feature scaler artifact | `models/transform.save` | No |
+| `SECRET_KEY` | Flask secret key for session management | `your-secure-random-key` | ✅ Yes |
+
+## Optional Environment Variables
+
+These variables have sensible defaults and are optional:
+
+| Variable | Description | Default |
+| --- | --- | --- |
+| `LOG_LEVEL` | Logging level (DEBUG, INFO, WARNING, ERROR) | `INFO` |
+| `MODEL_PATH` | Path to trained model artifact | `models/floods.save` |
+| `SCALER_PATH` | Path to feature scaler artifact | `models/transform.save` |
+
+## Vercel Managed Variables
+
+The following are **automatically managed by Vercel** and should NOT be set manually:
+- `HOST` - Automatically set by Vercel
+- `PORT` - Automatically managed by Vercel
+- `DEBUG` - Automatically set to `False` in production
+- `FLASK_ENV` - Automatically set to `production`
 
 ## Step-by-Step Deployment
 
@@ -76,14 +90,10 @@ git push origin main
 6. **Install Command**: `pip install -r requirements.txt`
 
 ### 4. Add Environment Variables
-In the "Environment Variables" section, add:
+In the "Environment Variables" section, **add only**:
 
 ```
 SECRET_KEY=your-secure-random-key-here
-DEBUG=False
-LOG_LEVEL=INFO
-MODEL_PATH=models/floods.save
-SCALER_PATH=models/transform.save
 ```
 
 **To generate a secure SECRET_KEY:**
@@ -93,6 +103,13 @@ print(secrets.token_hex(32))
 ```
 
 Or use an online generator: https://generate.security/
+
+**Optional**: If you want to override default values:
+```
+LOG_LEVEL=INFO
+MODEL_PATH=models/floods.save
+SCALER_PATH=models/transform.save
+```
 
 ### 5. Deploy
 1. Click the "Deploy" button
@@ -143,8 +160,8 @@ Template for environment variables. Update with production values before deployi
 ### Issue: 500 errors after deployment
 **Solution**:
 1. Check Vercel logs: Dashboard → Your Project → Deployments → Logs
-2. Ensure `DEBUG=False` is set (stack traces won't be exposed in production)
-3. Verify all environment variables are set in Vercel dashboard
+2. Verify that `SECRET_KEY` environment variable is set
+3. Verify all model artifacts are present in the repository
 
 ### Issue: Prediction returns 502 or timeout
 **Solution**: 
