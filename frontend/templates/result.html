@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section class="container py-5">
+  <div class="row g-4 justify-content-center">
+    <div class="col-lg-8 reveal">
+      <div class="result-card text-center p-5">
+        {% if prediction == 1 %}
+          <div class="display-1 mb-4"><i class="bi bi-exclamation-triangle-fill text-danger"></i></div>
+          <div class="eyebrow mb-3"><i class="bi bi-exclamation-triangle"></i> Flood Detected</div>
+          <h1 class="display-5 fw-bold mb-4">Flood Detected</h1>
+          <p class="lead text-muted mb-4">This area is likely to experience flooding based on the provided weather conditions.</p>
+          <div class="alert alert-danger border-0 shadow-sm text-start" role="alert">
+            <h3 class="h5 mb-3">Recommendation</h3>
+            <ul class="list-check mb-0">
+              <li>Stay informed through official weather alerts.</li>
+              <li>Avoid low-lying areas.</li>
+              <li>Prepare an emergency kit.</li>
+              <li>Follow evacuation instructions if issued.</li>
+            </ul>
+          </div>
+        {% else %}
+          <div class="display-1 mb-4"><i class="bi bi-check-circle-fill text-success"></i></div>
+          <div class="eyebrow mb-3"><i class="bi bi-check-circle"></i> No Flood Detected</div>
+          <h1 class="display-5 fw-bold mb-4">No Flood Detected</h1>
+          <p class="lead text-muted mb-4">No flood risk is predicted based on the provided weather conditions.</p>
+          <div class="alert alert-success border-0 shadow-sm text-start" role="alert">
+            <h3 class="h5 mb-3">Recommendation</h3>
+            <ul class="list-check mb-0">
+              <li>Continue normal activities.</li>
+              <li>Monitor weather updates periodically.</li>
+              <li>Stay prepared during heavy rainfall seasons.</li>
+            </ul>
+          </div>
+        {% endif %}
+        <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+          <a class="btn btn-primary btn-lg px-4" href="{{ url_for('main.predict') }}">Predict Again</a>
+          <a class="btn btn-outline-primary btn-lg px-4" href="{{ url_for('main.home') }}">Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 justify-content-center mt-1">
+    <div class="col-lg-8 reveal">
+      <div class="panel-card h-100">
+        <h3 class="mb-3">Input Summary</h3>
+        <ul class="list-check">
+          {% for key, value in inputs.items() %}
+            <li><strong>{{ key.replace('_', ' ') }}:</strong> {{ value }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

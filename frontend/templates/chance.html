@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 reveal">
+      <div class="status-card text-center border-danger-subtle">
+        <img src="{{ url_for('static', filename='images/flood.svg') }}" alt="Warning flood icon" class="mb-4" style="max-width: 180px;">
+        <div class="eyebrow"><i class="bi bi-exclamation-triangle"></i> Flood Detected</div>
+        <h1 class="display-6 fw-bold mt-3 mb-3">Flood Detected</h1>
+        <p class="lead text-muted">This area is likely to experience flooding based on the provided weather conditions.</p>
+        <div class="alert border-0 mt-4 mx-auto text-start" style="max-width: 620px; background: rgba(239, 68, 68, 0.1); color: var(--danger);">
+          <strong>Recommendation</strong>
+          <ul class="list-check mb-0 mt-3">
+            <li>Stay informed through official weather alerts.</li>
+            <li>Avoid low-lying areas.</li>
+            <li>Prepare an emergency kit.</li>
+            <li>Follow evacuation instructions if issued.</li>
+          </ul>
+        </div>
+        <div class="d-flex justify-content-center flex-wrap gap-3 mt-4">
+          <a class="btn btn-danger btn-lg px-4" href="{{ url_for('main.predict') }}">Predict Again</a>
+          <a class="btn btn-outline-primary btn-lg px-4" href="{{ url_for('main.home') }}">Back Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

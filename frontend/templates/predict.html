@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section class="container py-5">
+  <div class="row g-4 justify-content-center">
+    <div class="col-lg-8 reveal">
+      <div class="form-card">
+        <div class="eyebrow"><i class="bi bi-sliders"></i> Flood risk evaluation</div>
+        <h1 class="display-6 fw-bold mt-3 mb-2">Model input workspace</h1>
+        <p class="text-muted mb-4">Enter the latest environmental parameters to estimate flood likelihood with confidence.</p>
+
+        <form id="predictionForm" data-validate-form method="post" action="{{ url_for('main.predict') }}" novalidate>
+          {% if error %}
+          <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+          {% endif %}
+          <div class="row g-4">
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="temperature">Temperature <span class="text-danger">*</span></label>
+              <input class="form-control" id="temperature" name="temperature" type="number" step="0.1" min="-50" max="60" placeholder="e.g. 28.4" value="{{ inputs.temperature | default('') }}" required>
+              <div class="invalid-feedback">Temperature is required and must be between -50 and 60.</div>
+            </div>
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="humidity">Humidity <span class="text-danger">*</span></label>
+              <input class="form-control" id="humidity" name="humidity" type="number" step="0.1" min="0" max="100" placeholder="e.g. 78" value="{{ inputs.humidity | default('') }}" required>
+              <div class="invalid-feedback">Humidity is required and must be between 0 and 100.</div>
+            </div>
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="cloud_cover">Cloud Cover <span class="text-danger">*</span></label>
+              <input class="form-control" id="cloud_cover" name="cloud_cover" type="number" step="0.1" min="0" max="100" placeholder="e.g. 60" value="{{ inputs.cloud_cover | default('') }}" required>
+              <div class="invalid-feedback">Cloud cover is required and must be between 0 and 100.</div>
+            </div>
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="annual_rainfall">Annual Rainfall <span class="text-danger">*</span></label>
+              <input class="form-control" id="annual_rainfall" name="annual_rainfall" type="number" step="0.1" min="0" max="10000" placeholder="e.g. 1800" value="{{ inputs.annual_rainfall | default('') }}" required>
+              <div class="invalid-feedback">Annual rainfall is required and must be between 0 and 10000.</div>
+            </div>
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="jan_feb">Jan-Feb Rainfall <span class="text-danger">*</span></label>
+              <input class="form-control" id="jan_feb" name="jan_feb" type="number" step="0.1" min="0" max="5000" placeholder="e.g. 220" value="{{ inputs.jan_feb | default('') }}" required>
+              <div class="invalid-feedback">Jan-Feb rainfall is required and must be between 0 and 5000.</div>
+            </div>
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="mar_may">Mar-May Rainfall <span class="text-danger">*</span></label>
+              <input class="form-control" id="mar_may" name="mar_may" type="number" step="0.1" min="0" max="5000" placeholder="e.g. 340" value="{{ inputs.mar_may | default('') }}" required>
+              <div class="invalid-feedback">Mar-May rainfall is required and must be between 0 and 5000.</div>
+            </div>
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="jun_sep">Jun-Sep Rainfall <span class="text-danger">*</span></label>
+              <input class="form-control" id="jun_sep" name="jun_sep" type="number" step="0.1" min="0" max="5000" placeholder="e.g. 610" value="{{ inputs.jun_sep | default('') }}" required>
+              <div class="invalid-feedback">Jun-Sep rainfall is required and must be between 0 and 5000.</div>
+            </div>
+            <div class="col-md-6 form-floating-label">
+              <label class="form-label" for="oct_dec">Oct-Dec Rainfall <span class="text-danger">*</span></label>
+              <input class="form-control" id="oct_dec" name="oct_dec" type="number" step="0.1" min="0" max="5000" placeholder="e.g. 280" value="{{ inputs.oct_dec | default('') }}" required>
+              <div class="invalid-feedback">Oct-Dec rainfall is required and must be between 0 and 5000.</div>
+            </div>
+            <div class="col-md-12 form-floating-label">
+              <label class="form-label" for="average_june">Average June <span class="text-danger">*</span></label>
+              <input class="form-control" id="average_june" name="average_june" type="number" step="0.1" min="0" max="1000" placeholder="e.g. 95" value="{{ inputs.average_june | default('') }}" required>
+              <div class="invalid-feedback">Average June is required and must be between 0 and 1000.</div>
+            </div>
+            <div class="col-md-12 form-floating-label">
+              <label class="form-label" for="sub">Subdivision Value <span class="text-danger">*</span></label>
+              <input class="form-control" id="sub" name="sub" type="number" step="0.1" min="0" max="10000" placeholder="e.g. 649.9" value="{{ inputs.sub | default('') }}" required>
+              <div class="invalid-feedback">Subdivision value is required and must be a number.</div>
+            </div>
+          </div>
+
+          <div class="alert alert-light border mt-4 d-flex align-items-start gap-2" role="status" data-loading-status hidden>
+            <i class="bi bi-cpu"></i>
+            <div>
+              <strong>AI is analyzing weather data...</strong>
+              <div class="small text-muted">Estimating flood probability. Please wait.</div>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-4">
+              <span class="me-2"><i class="bi bi-shield-shaded"></i></span>Predict Flood
+            </button>
+            <a href="{{ url_for('main.home') }}" class="btn btn-outline-primary btn-lg px-4">Back Home</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

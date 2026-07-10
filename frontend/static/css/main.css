@@ -1,0 +1,134 @@
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, var(--background) 0%, #efe4d0 100%);
+  color: var(--text);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.page-shell {
+  min-height: 100vh;
+}
+
+.site-header {
+  border-bottom: 1px solid rgba(34, 49, 43, 0.08);
+  background: rgba(252, 248, 241, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.navbar-brand {
+  color: var(--text) !important;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.nav-link {
+  color: var(--muted) !important;
+  font-weight: 600;
+}
+
+.nav-link:hover {
+  color: var(--primary) !important;
+}
+
+.site-footer {
+  border-top: 1px solid rgba(34, 49, 43, 0.08);
+  color: var(--muted);
+  background: rgba(252, 248, 241, 0.9);
+}
+
+.hero-card,
+.panel-card,
+.form-card,
+.result-card,
+.status-card,
+.feature-card,
+.metric-card,
+.overview-card,
+.tech-card,
+.impact-card,
+.cta-card,
+.hero-visual-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before,
+.panel-card::before,
+.form-card::before,
+.result-card::before,
+.status-card::before,
+.hero-visual-card::before {
+  content: '';
+  position: absolute;
+  inset: auto -20px -40px auto;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.16), transparent 70%);
+  pointer-events: none;
+}
+
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.section-heading h2 {
+  font-size: clamp(1.35rem, 2.35vw, 1.8rem);
+}
+
+.btn {
+  border-radius: 999px;
+  padding-inline: 1.2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-lg {
+  min-height: 48px;
+}
+
+.text-muted {
+  color: var(--muted) !important;
+}
+
+.container {
+  max-width: 1180px;
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulseArrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}

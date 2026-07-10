@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 reveal">
+      <div class="status-card text-center border-success-subtle">
+        <img src="{{ url_for('static', filename='images/safe.svg') }}" alt="Safety success icon" class="mb-4" style="max-width: 180px;">
+        <div class="eyebrow"><i class="bi bi-check-circle"></i> No Flood Detected</div>
+        <h1 class="display-6 fw-bold mt-3 mb-3">No Flood Detected</h1>
+        <p class="lead text-muted">No flood risk is predicted based on the provided weather conditions.</p>
+        <div class="alert border-0 mt-4 mx-auto text-start" style="max-width: 620px; background: rgba(16, 185, 129, 0.1); color: var(--success);">
+          <strong>Recommendation</strong>
+          <ul class="list-check mb-0 mt-3">
+            <li>Continue normal activities.</li>
+            <li>Monitor weather updates periodically.</li>
+            <li>Stay prepared during heavy rainfall seasons.</li>
+          </ul>
+        </div>
+        <div class="d-flex justify-content-center flex-wrap gap-3 mt-4">
+          <a class="btn btn-success btn-lg px-4" href="{{ url_for('main.predict') }}">Predict Again</a>
+          <a class="btn btn-outline-primary btn-lg px-4" href="{{ url_for('main.home') }}">Back Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
