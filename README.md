@@ -201,12 +201,57 @@ reports/
 ```
 
 ## Deployment
+
+### Local Development
 1. Create and activate a virtual environment.
 2. Install dependencies: `pip install -r requirements.txt`
 3. Copy `.env.example` to `.env` and update values as needed.
 4. Start locally for development: `python -m flask --app src.app run --debug`
-5. For production, use a WSGI server such as Gunicorn:
-   `gunicorn -b 0.0.0.0:8000 src.app:app`
+
+### Production with Gunicorn
+For traditional server deployment, use a WSGI server such as Gunicorn:
+```bash
+gunicorn -w 4 -b 0.0.0.0:8000 "src.app:app"
+```
+
+### Deployment on Vercel
+
+Rising Waters is fully compatible with Vercel and can be deployed with a single click from GitHub.
+
+#### Quick Start
+1. Push your code to GitHub: `git push origin main`
+2. Visit https://vercel.com/new
+3. Import your GitHub repository
+4. Add environment variables (see below)
+5. Click Deploy
+
+#### Required Environment Variables for Vercel
+| Variable | Value | Example |
+| --- | --- | --- |
+| `SECRET_KEY` | Random 32+ character string | `your-secure-key-here` |
+| `DEBUG` | `False` (never True in production) | `False` |
+| `LOG_LEVEL` | Logging level | `INFO` |
+| `MODEL_PATH` | Path to model artifact | `models/floods.save` |
+| `SCALER_PATH` | Path to scaler artifact | `models/transform.save` |
+
+#### Generate a Secure SECRET_KEY
+```python
+import secrets
+print(secrets.token_hex(32))
+```
+
+#### How It Works
+- The `api/index.py` file serves as the serverless function handler for Vercel
+- Vercel automatically detects Flask and configures the Python runtime
+- All routes are forwarded to the Flask application
+- Model artifacts are included in the deployment
+
+#### For Detailed Instructions
+See [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md) for:
+- Step-by-step deployment guide
+- Troubleshooting common issues
+- Monitoring and maintenance
+- Redeployment procedures
 
 ## Documentation
 - Architecture and application flow are described in `reports/architecture.md`.

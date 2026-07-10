@@ -1,0 +1,23 @@
+{
+  "buildCommand": "pip install -r requirements.txt",
+  "devCommand": "python -m flask --app src.app run --debug",
+  "env": {
+    "PYTHONUNBUFFERED": "1",
+    "DEBUG": "@debug",
+    "SECRET_KEY": "@secret_key",
+    "LOG_LEVEL": "INFO",
+    "MODEL_PATH": "models/floods.save",
+    "SCALER_PATH": "models/transform.save"
+  },
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
+  ]
+}
