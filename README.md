@@ -281,3 +281,131 @@ See [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md) for:
 - The Flask app loads the serialized model from `models/floods.save` and the scaler from `models/transform.save` for every prediction.
 - `src/train.py` provides a CLI wrapper for the training pipeline.
 - `src/predict.py` provides a CLI wrapper for the prediction pipeline.
+
+## Troubleshooting
+
+### Vercel Deployment Issues
+
+#### Error: "Invalid request: should NOT have additional property"
+**Cause**: The `vercel.json` contains invalid properties like `envObjects` or deprecated `env` configuration.  
+**Solution**: Use the latest `vercel.json` configuration without `envObjects`. All environment variables should be set via Vercel Dashboard.
+
+#### Error: "Module not found" during build
+**Cause**: Python module import paths are incorrect.  
+**Solution**: Verify that:
+1. All imports use relative paths from project root
+2. `sys.path` includes the project root in `api/index.py`
+3. No hardcoded absolute paths exist
+
+#### Error: "Model artifact not found"
+**Cause**: Model files (`floods.save`, `transform.save`) are missing from deployment.  
+**Solution**: Ensure:
+1. Model files are committed to GitHub: `git add models/`
+2. Paths use `pathlib.Path` and are relative to project root
+3. `backend/app.py` validates artifacts on startup
+
+#### Error: "SECRET_KEY not set"
+**Cause**: Missing required environment variable in Vercel Dashboard.  
+**Solution**: 
+1. Generate secure key: `python -c "import secrets; print(secrets.token_hex(32))"`
+2. Add to Vercel Dashboard → Settings → Environment Variables
+3. Redeploy the project
+
+#### Error: "Static files (CSS/JS) not loading"
+**Cause**: Flask is not configured with correct static folder paths.  
+**Solution**: Verify that `backend/app.py` has:
+```python
+app = Flask(
+    __name__,
+    template_folder=str(BASE_DIR / "frontend" / "templates"),
+    static_folder=str(BASE_DIR / "frontend" / "static"),
+)
+```
+
+#### Error: "502 Bad Gateway"
+**Cause**: Flask app crashed or serverless function timed out.  
+**Solution**: 
+1. Check Vercel logs: Dashboard → Deployments → Click deployment → Logs
+2. Verify all required dependencies are in `requirements.txt`
+3. Ensure model loading doesn't timeout (should be <5 seconds)
+4. Check that SECRET_KEY is set
+
+#### Error: "Cold start timeout"
+**Cause**: First request after deployment takes too long.  
+**Solution**: This is normal behavior on Vercel. Cold starts typically take 5-10 seconds. Subsequent requests are fast.
+
+### Local Development Issues
+
+#### Error: "Failed to load artifact"
+**Cause**: Model files don't exist or path is incorrect.  
+**Solution**:
+1. Verify files exist: `ls models/floods.save models/transform.save`
+2. Ensure you're running from project root
+3. Check that `.env` file exists (if needed)
+
+#### Error: "Port 5000 already in use"
+**Cause**: Another process is using port 5000.  
+**Solution**: Either:
+1. Kill the process: `lsof -ti:5000 | xargs kill -9` (macOS/Linux)
+2. Change port: `python -m flask --app src.app run --port 8000`
+
+#### Error: "Template not found"
+**Cause**: Flask is not finding template files.  
+**Solution**: Ensure you're running from the project root:
+```bash
+cd /path/to/Rising_Waters
+python -m flask --app src.app run --debug
+```
+
+### Testing & Validation
+
+#### Run Tests Locally
+```bash
+pytest tests/ -v
+pytest tests/ -v --cov=backend --cov=ml
+```
+
+#### Test Vercel Handler Locally
+```bash
+python -c "import os; os.environ['FLASK_ENV']='production'; from api.index import app; print(app)"
+```
+
+#### Test Flask Routes Locally
+```bash
+python -m flask --app src.app run --debug
+# Visit http://localhost:5000/health
+# Visit http://localhost:5000/predict
+```
+
+### Common Configuration Issues
+
+| Issue | Cause | Solution |
+| --- | --- | --- |
+| `DEBUG` is True in production | `FLASK_ENV` is not set to `production` | Vercel automatically sets this; no action needed |
+| Model loads slowly | Model is being loaded on every request | This is expected; model loading is cached in globals |
+| Prediction returns wrong results | Input validation failure | Verify all 10 input fields are provided and numeric |
+| Routes return 404 | Blueprint not registered | Ensure `app.register_blueprint(main)` is called in `backend/app.py` |
+| CORS errors | Frontend and backend on different origins | Vercel routes both through same domain; should not occur |
+
+### Getting Help
+
+1. Check the logs:
+   ```bash
+   vercel logs <project-name>
+   ```
+
+2. Run deployment audit locally:
+   ```bash
+   python deployment_audit.py
+   ```
+
+3. Review documentation:
+   - [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md)
+   - [VERCEL_OPTIMIZATION.md](VERCEL_OPTIMIZATION.md)
+   - [DEPLOYMENT_READINESS_REPORT.md](DEPLOYMENT_READINESS_REPORT.md)
+
+4. Check Flask logs during local testing:
+   ```bash
+   python -m flask --app src.app run --debug
+   ```
+

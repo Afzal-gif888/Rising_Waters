@@ -1,23 +1,6 @@
 {
   "buildCommand": "pip install -r requirements.txt",
   "devCommand": "python -m flask --app src.app run --debug",
-  "env": {
-    "SECRET_KEY": "@secret_key"
-  },
-  "envObjects": [
-    {
-      "key": "LOG_LEVEL",
-      "value": "INFO"
-    },
-    {
-      "key": "MODEL_PATH",
-      "value": "models/floods.save"
-    },
-    {
-      "key": "SCALER_PATH",
-      "value": "models/transform.save"
-    }
-  ],
   "functions": {
     "api/index.py": {
       "maxDuration": 60

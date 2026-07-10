@@ -83,39 +83,4 @@ def handle_unexpected_error(error: Exception) -> tuple[str, int]:
 if __name__ == "__main__":
     app.run(debug=Config.DEBUG, host=Config.HOST, port=Config.PORT)
 
-app = Flask(
-    __name__,
-    template_folder=str(BASE_DIR / "frontend" / "templates"),
-    static_folder=str(BASE_DIR / "frontend" / "static"),
-)
-app.config.from_object(Config)
-app.register_blueprint(main)
-
-
-from werkzeug.exceptions import HTTPException
-
-
-@app.route("/health")
-def health() -> tuple[dict[str, str], int]:
-    return jsonify({"status": "ok"}), 200
-
-
-@app.errorhandler(404)
-def not_found(error: HTTPException) -> tuple[str, int]:
-    return render_template("404.html"), 404
-
-
-@app.errorhandler(500)
-def server_error(error: HTTPException) -> tuple[str, int]:
-    app.logger.exception("Unhandled server error", exc_info=error)
-    return render_template("500.html"), 500
-
-
-@app.errorhandler(Exception)
-def handle_unexpected_error(error: Exception) -> tuple[str, int]:
-    app.logger.exception("Unhandled exception", exc_info=error)
-    return render_template("500.html"), 500
-
-
-if __name__ == "__main__":
     app.run(debug=Config.DEBUG, host=Config.HOST, port=Config.PORT)
