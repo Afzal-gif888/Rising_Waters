@@ -1,0 +1,20 @@
+# Exclude development, training, and analysis artifacts from deployment
+notebooks/
+ml/
+dataset/
+reports/
+logs/
+tests/
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+.git/
+requirements-dev.txt
+*.py[cod]
+*.log
+.env
+coverage/
+dist/
+build/
+*.egg-info/
